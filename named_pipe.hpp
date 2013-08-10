@@ -9,6 +9,8 @@
 #ifndef BOOST_INTERPROCESS_NAMED_PIPE_HPP
 #define BOOST_INTERPROCESS_NAMED_PIPE_HPP
 
+#include <cstddef>
+
 namespace boost {
 namespace interprocess {
 
