@@ -10,6 +10,7 @@
 #define BOOST_INTERPROCESS_NAMED_PIPE_HPP
 
 #include <cstddef>
+#include <string>
 
 namespace boost {
 namespace interprocess {
@@ -26,6 +27,9 @@ class named_pipe_object
     * @param name The name of the named pipe to connect to.
     */
    named_pipe_object(const char *name);
+
+   /// Construct and open a named_pipe_object
+   named_pipe_object(const std::string &name);
 
    /// Returns the name of the named pipe object.
    const char *get_name() const;
@@ -81,6 +85,9 @@ class named_pipe_server
     * is made.
     */
    named_pipe_server(const char *name);
+
+   /// Construct a named_pipe_server.
+   named_pipe_server(const std::string &name);
 
    /// Returns the name of the named pipe object.
    const char *get_name() const;
