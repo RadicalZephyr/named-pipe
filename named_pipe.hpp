@@ -18,8 +18,8 @@ class named_pipe_object
    public:
    /// Construct and open a named_pipe_object
    /**
-    * This constructor opens an already existing named pipe with the
-    * specified name.
+    * This constructor opens a connection to an already existing named
+    * pipe with the specified name.
     *
     * @param name The name of the named pipe to connect to.
     */
@@ -71,7 +71,7 @@ class named_pipe_server
    /// Construct a named_pipe_server.
    /**
     * This constructor creates an object which can be used to listen
-    * for connections at a named pipe address.
+    * for named pipe connections under the specified name.
     *
     * @param name The name of the new pipe server.
     *
