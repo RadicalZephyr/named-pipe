@@ -6,6 +6,6 @@
 ## X-URL:
 
 test: test.cpp
-	g++ test.cpp
+	g++ test.cpp -g -o test
 
 ### Makefile ends here
