@@ -42,12 +42,12 @@ class named_pipe_object
     *
     * @param buffer A buffer into which the data will be read.
     *
-    * @return The number of bytes written.
+    * @return The number of bytes read.
     *
     * @throws boost::system::system_error Thrown on failure.
     *
-    * @note The read_some operation may not transmit all of the data
-    * to the peer.
+    * @note The read_some operation may not completely fill the
+    * buffer.
     */
    std::size_t read_some(char *buffer);
 
