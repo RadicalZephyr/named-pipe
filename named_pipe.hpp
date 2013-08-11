@@ -11,7 +11,7 @@
 
 #include <boost/config.hpp>
 
-#include <boost/scoped_ptr.hpp>
+#include <memory>
 
 #ifdef BOOST_WINDOWS
 
@@ -25,6 +25,8 @@
 
 namespace boost {
 namespace interprocess {
+
+  class named_pipe_server;
 
   class named_pipe
   {
@@ -83,9 +85,14 @@ namespace interprocess {
       return _pimpl->write_some(buffer);
     }
 
+    friend class named_pipe_server;
+
   private:
 
-    scoped_ptr<named_pipe_impl> _pimpl;
+    std::auto_ptr<named_pipe_impl> _pimpl;
+
+    named_pipe(named_pipe_impl *pimpl): _pimpl(pimpl)
+    {}
   };
 
   class named_pipe_server
@@ -119,11 +126,13 @@ namespace interprocess {
      * @return The named_pipe for communicating with the new client.
      */
      named_pipe accept() {
+       named_pipe pipe(_pimpl->accept());
+       return pipe;
      }
 
   private:
 
-    scoped_ptr<named_pipe_server_impl> _pimpl;
+    std::auto_ptr<named_pipe_server_impl> _pimpl;
   };
 
 }  //namespace interprocess {

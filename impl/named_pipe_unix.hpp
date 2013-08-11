@@ -44,7 +44,7 @@ namespace interprocess {
       return _name;
     }
 
-    named_pipe_impl accept();
+    named_pipe_impl *accept();
 
   private:
     const std::string _name;
