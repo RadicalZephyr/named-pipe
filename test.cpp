@@ -1,10 +1,13 @@
 
+#include <cstdio>
 #include "named_pipe.hpp"
 
 using namespace boost::interprocess;
 
 int main() {
-
-  named_pipe_server server("my/named/pipe");
+  const char *pipename = "my/named/pipe";
+  named_pipe_server server(pipename);
   named_pipe pipe = server.accept();
+
+  printf("%s == %s", pipe.get_name().c_str(), pipename);
 }
