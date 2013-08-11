@@ -9,15 +9,17 @@
 #ifndef BOOST_INTERPROCESS_NAMED_PIPE_HPP
 #define BOOST_INTERPROCESS_NAMED_PIPE_HPP
 
-#include <cstddef>
-#include <string>
-#include <vector>
+#include <boost/config.hpp>
 
-#include <boost/asio/buffer.hpp>
+#include <boost/scoped_ptr.hpp>
 
-#ifndef BOOST_WINDOWS
+#ifdef BOOST_WINDOWS
 
-#else // defined BOOST_WINDOWS
+#include "impl/named_pipe_windows.hpp"
+
+#else // !defined BOOST_WINDOWS
+
+#include "impl/named_pipe_unix.hpp"
 
 #endif
 
@@ -35,10 +37,14 @@ namespace interprocess {
      *
      * @param name The name of the named pipe to connect to.
      */
-    named_pipe(const std::string &name);
+    named_pipe(const std::string &name): _name(name),
+                                         _pimpl(new named_pipe_impl(name))
+    {}
 
     /// Returns the name of the named pipe object.
-    const std::string &get_name();
+    const std::string &get_name() {
+      return _name;
+    }
 
     /// Read some data from the named pipe.
     /**
@@ -55,7 +61,9 @@ namespace interprocess {
      * @note The read_some operation may not completely fill the
      * buffer.
      */
-    std::size_t read_some(boost::asio::mutable_buffer &buffer);
+    std::size_t read_some(boost::asio::mutable_buffer &buffer) {
+      return _pimpl->read_some(buffer);
+    }
 
     /// Write some data to the named pipe.
     /**
@@ -72,12 +80,15 @@ namespace interprocess {
      * @note The write_some operation may not transmit all of the data
      * to the peer.
      */
-    std::size_t write_some(boost::asio::const_buffer &buffer);
+    std::size_t write_some(boost::asio::const_buffer &buffer) {
+      return _pimpl->write_some(buffer);
+    }
 
   private:
 
-    std::string _name;
+    const std::string &_name;
 
+    scoped_ptr<named_pipe_impl> _pimpl;
   };
 
   class named_pipe_server
@@ -94,10 +105,15 @@ namespace interprocess {
      * @note Nothing is actually opened or setup until a call to accept
      * is made.
      */
-    named_pipe_server(const std::string &name);
+    named_pipe_server(const std::string &name):
+      _name(name),
+      _pimpl(new named_pipe_server_impl(name))
+    {}
 
     /// Returns the name of the named pipe.
-    const std::string &get_name();
+    const std::string &get_name() {
+      return _name;
+    }
 
     /// Waits for a new connection from a client process.
     /**
@@ -106,11 +122,14 @@ namespace interprocess {
      *
      * @return The named_pipe for communicating with the new client.
      */
-    named_pipe accept();
+     named_pipe accept() {
+     }
 
   private:
 
-    std::string _name;
+    const std::string &_name;
+
+    boost::scoped_ptr<named_pipe_server_impl> _pimpl;
 
   };
 
