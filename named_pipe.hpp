@@ -11,7 +11,7 @@
 
 #include <boost/config.hpp>
 
-#include <memory>
+#include <boost/shared_ptr.hpp>
 
 #ifdef BOOST_WINDOWS
 
@@ -42,9 +42,9 @@ namespace interprocess {
     named_pipe(const std::string &name): _pimpl(new named_pipe_impl(name))
     {}
 
-    named_pipe(named_pipe &pipe): _pimpl(pipe._pimpl) {}
+    named_pipe(const named_pipe &pipe): _pimpl(pipe._pimpl) {}
 
-    named_pipe &operator =(named_pipe &that) {
+    named_pipe &operator =(const named_pipe &that) {
       if (this != &that) {
         _pimpl = that._pimpl;
       }
@@ -97,7 +97,7 @@ namespace interprocess {
 
   private:
 
-    std::auto_ptr<named_pipe_impl> _pimpl;
+    boost::shared_ptr<named_pipe_impl> _pimpl;
 
     named_pipe(named_pipe_impl *pimpl): _pimpl(pimpl)
     {}
@@ -133,14 +133,14 @@ namespace interprocess {
      *
      * @return The named_pipe for communicating with the new client.
      */
-     named_pipe accept() {
+    named_pipe accept() {
        named_pipe pipe(_pimpl->accept());
        return pipe;
      }
 
   private:
 
-    std::auto_ptr<named_pipe_server_impl> _pimpl;
+    boost::shared_ptr<named_pipe_server_impl> _pimpl;
   };
 
 }  //namespace interprocess {
