@@ -22,9 +22,16 @@ namespace interprocess {
   public:
     named_pipe_impl(const std::string &name);
 
+    const std::string &get_name() {
+      return _name;
+    }
+
     std::size_t read_some(boost::asio::mutable_buffer &buffer);
 
     std::size_t write_some(boost::asio::const_buffer &buffer);
+
+  private:
+    const std::string _name;
 
   };
 
@@ -33,8 +40,14 @@ namespace interprocess {
   public:
     named_pipe_server_impl(const std::string &name);
 
+    const std::string &get_name() {
+      return _name;
+    }
+
     named_pipe_impl accept();
 
+  private:
+    const std::string _name;
   };
 
 }  //namespace interprocess {

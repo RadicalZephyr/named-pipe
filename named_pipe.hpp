@@ -37,13 +37,12 @@ namespace interprocess {
      *
      * @param name The name of the named pipe to connect to.
      */
-    named_pipe(const std::string &name): _name(name),
-                                         _pimpl(new named_pipe_impl(name))
+    named_pipe(const std::string &name): _pimpl(new named_pipe_impl(name))
     {}
 
     /// Returns the name of the named pipe object.
     const std::string &get_name() {
-      return _name;
+      return _pimpl->get_name();
     }
 
     /// Read some data from the named pipe.
@@ -86,8 +85,6 @@ namespace interprocess {
 
   private:
 
-    const std::string &_name;
-
     scoped_ptr<named_pipe_impl> _pimpl;
   };
 
@@ -106,13 +103,12 @@ namespace interprocess {
      * is made.
      */
     named_pipe_server(const std::string &name):
-      _name(name),
       _pimpl(new named_pipe_server_impl(name))
     {}
 
     /// Returns the name of the named pipe.
     const std::string &get_name() {
-      return _name;
+      return _pimpl->get_name();
     }
 
     /// Waits for a new connection from a client process.
@@ -127,10 +123,7 @@ namespace interprocess {
 
   private:
 
-    const std::string &_name;
-
-    boost::scoped_ptr<named_pipe_server_impl> _pimpl;
-
+    scoped_ptr<named_pipe_server_impl> _pimpl;
   };
 
 }  //namespace interprocess {
