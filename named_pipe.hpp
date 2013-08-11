@@ -42,6 +42,14 @@ namespace interprocess {
     named_pipe(const std::string &name): _pimpl(new named_pipe_impl(name))
     {}
 
+    named_pipe(named_pipe &pipe): _pimpl(pipe._pimpl) {}
+
+    named_pipe &operator =(named_pipe &that) {
+      if (this != &that) {
+        _pimpl = that._pimpl;
+      }
+    }
+
     /// Returns the name of the named pipe object.
     const std::string &get_name() {
       return _pimpl->get_name();
