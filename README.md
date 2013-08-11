@@ -6,3 +6,6 @@ cross-platform named-pipe implementation.  One of the design goals is
 that it eventually be included in the Boost.Interprocess library.
 
 Ideas and suggestions (and pull requests!) welcome!
+
+Thanks for their help in refining the interface to: Rob Stewart and
+Edward Diener.
