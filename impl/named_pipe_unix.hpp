@@ -71,7 +71,7 @@ namespace interprocess {
   }
 
   inline named_pipe_impl *named_pipe_server_impl::accept() {
-
+    return new named_pipe_impl(_name);
   }
 
   // End named_pipe_server_impl
