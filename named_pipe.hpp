@@ -29,14 +29,10 @@ namespace interprocess {
      *
      * @param name The name of the named pipe to connect to.
      */
-    named_pipe(const char *name);
-
-    /// Overload of the const char * constructor with identical
-    /// semantics.
     named_pipe(const std::string &name);
 
     /// Returns the name of the named pipe object.
-    const char *get_name();
+    const std::string &get_name();
 
     /// Read some data from the named pipe.
     /**
@@ -88,14 +84,10 @@ namespace interprocess {
      * @note Nothing is actually opened or setup until a call to accept
      * is made.
      */
-    named_pipe_server(const char *name);
-
-    /// Overload of the const char * constructor with identical
-    /// semantics.
     named_pipe_server(const std::string &name);
 
     /// Returns the name of the named pipe.
-    const char *get_name();
+    const std::string &get_name();
 
     /// Waits for a new connection from a client process.
     /**
