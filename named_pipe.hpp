@@ -15,6 +15,12 @@
 
 #include <boost/asio/buffer.hpp>
 
+#ifndef BOOST_WINDOWS
+
+#else // defined BOOST_WINDOWS
+
+#endif
+
 namespace boost {
 namespace interprocess {
 
