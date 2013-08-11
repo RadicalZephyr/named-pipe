@@ -50,7 +50,7 @@ namespace interprocess {
      * @note The read_some operation may not completely fill the
      * buffer.
      */
-    std::size_t read_some(char *buffer);
+    std::size_t read_some(std::vector<char> &buffer);
 
     /// Write some data to the named pipe.
     /**
@@ -67,7 +67,7 @@ namespace interprocess {
      * @note The write_some operation may not transmit all of the data
      * to the peer.
      */
-    std::size_t write_some(const char *buffer);
+    std::size_t write_some(const std::vector<char> buffer);
 
   };
 
