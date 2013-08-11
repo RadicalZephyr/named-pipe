@@ -16,7 +16,7 @@
 namespace boost {
 namespace interprocess {
 
-  class named_pipe_object
+  class named_pipe
   {
 
   public:
@@ -27,10 +27,11 @@ namespace interprocess {
      *
      * @param name The name of the named pipe to connect to.
      */
-    named_pipe_object(const char *name);
+    named_pipe(const char *name);
 
-    /// Construct and open a named_pipe_object
-    named_pipe_object(const std::string &name);
+    /// Overload of the const char * constructor with identical
+    /// semantics.
+    named_pipe(const std::string &name);
 
     /// Returns the name of the named pipe object.
     const char *get_name() const;
@@ -87,21 +88,21 @@ namespace interprocess {
      */
     named_pipe_server(const char *name);
 
-    /// Construct a named_pipe_server.
+    /// Overload of the const char * constructor with identical
+    /// semantics.
     named_pipe_server(const std::string &name);
 
-    /// Returns the name of the named pipe object.
+    /// Returns the name of the named pipe.
     const char *get_name() const;
 
     /// Waits for a new connection from a client process.
     /**
-     * This function is used to wait for and accept a new connection on
-     * this named pipe.
+     * This function is used to wait for and accept a new connection
+     * on this named pipe.
      *
-     * @return The named_pipe_object for communicating with the new
-     * client.
+     * @return The named_pipe for communicating with the new client.
      */
-    named_pipe_object accept();
+    named_pipe accept();
 
   };
 
