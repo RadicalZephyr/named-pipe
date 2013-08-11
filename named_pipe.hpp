@@ -36,7 +36,7 @@ namespace interprocess {
     named_pipe(const std::string &name);
 
     /// Returns the name of the named pipe object.
-    const char *get_name() const;
+    const char *get_name();
 
     /// Read some data from the named pipe.
     /**
@@ -95,7 +95,7 @@ namespace interprocess {
     named_pipe_server(const std::string &name);
 
     /// Returns the name of the named pipe.
-    const char *get_name() const;
+    const char *get_name();
 
     /// Waits for a new connection from a client process.
     /**
