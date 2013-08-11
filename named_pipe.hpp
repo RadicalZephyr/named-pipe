@@ -68,6 +68,10 @@ namespace interprocess {
      */
     std::size_t write_some(boost::asio::const_buffer &buffer);
 
+  private:
+
+    std::string _name;
+
   };
 
   class named_pipe_server
@@ -97,6 +101,10 @@ namespace interprocess {
      * @return The named_pipe for communicating with the new client.
      */
     named_pipe accept();
+
+  private:
+
+    std::string _name;
 
   };
 
