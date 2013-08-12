@@ -76,7 +76,8 @@ namespace impl {
     int len = _name.length() + offsetof(struct sockaddr_un, sun_path);
 
     if (connect(_fd, (struct sockaddr *)&un, len) < 0) {
-      system_error e(linux_error::make_error_code(errno));
+      error_code ec(errno, system_category());
+      system_error e(ec);
       boost::throw_exception(e);
     }
   }
@@ -132,7 +133,8 @@ namespace impl {
     socklen_t len = sizeof(un);
 
     if ((clifd = ::accept(_fd, (struct sockaddr *)&un, &len)) < 0) {
-      system_error e(linux_error::make_error_code(errno));
+      error_code ec(errno, system_category());
+      system_error e(ec);
       boost::throw_exception(e);
     }
 

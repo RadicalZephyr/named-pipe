@@ -32,7 +32,8 @@ namespace impl {
   int make_local_socket() {
     int fd;
     if ((fd = socket(AF_UNIX, SOCK_STREAM, 0)) < 0) {
-      system_error e(linux_error::make_error_code(errno));
+      error_code ec(errno, system_category());
+      system_error e(ec);
       boost::throw_exception(e);
     }
 
@@ -48,7 +49,8 @@ namespace impl {
     int len = name.length() + offsetof(struct sockaddr_un, sun_path);
 
     if (bind(fd, (struct sockaddr *)&un, len) < 0) {
-      system_error e(linux_error::make_error_code(errno));
+      error_code ec(errno, system_category());
+      system_error e(ec);
       boost::throw_exception(e);
     }
 
