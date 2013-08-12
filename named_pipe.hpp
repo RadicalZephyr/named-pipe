@@ -39,7 +39,7 @@ namespace interprocess {
      *
      * @param name The name of the named pipe to connect to.
      */
-    named_pipe(const std::string &name): _pimpl(new named_pipe_impl(name))
+    named_pipe(const std::string &name): _pimpl(new impl::named_pipe_impl(name))
     {}
 
     named_pipe(const named_pipe &pipe): _pimpl(pipe._pimpl) {}
@@ -97,9 +97,9 @@ namespace interprocess {
 
   private:
 
-    boost::shared_ptr<named_pipe_impl> _pimpl;
+    boost::shared_ptr<impl::named_pipe_impl> _pimpl;
 
-    named_pipe(named_pipe_impl *pimpl): _pimpl(pimpl)
+    named_pipe(impl::named_pipe_impl *pimpl): _pimpl(pimpl)
     {}
   };
 
@@ -118,7 +118,7 @@ namespace interprocess {
      * is made.
      */
     named_pipe_server(const std::string &name):
-      _pimpl(new named_pipe_server_impl(name))
+      _pimpl(new impl::named_pipe_server_impl(name))
     {}
 
     /// Returns the name of the named pipe.
@@ -140,7 +140,7 @@ namespace interprocess {
 
   private:
 
-    boost::shared_ptr<named_pipe_server_impl> _pimpl;
+    boost::shared_ptr<impl::named_pipe_server_impl> _pimpl;
   };
 
 }  //namespace interprocess {

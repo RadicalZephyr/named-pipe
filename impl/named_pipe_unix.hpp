@@ -30,6 +30,7 @@
 
 namespace boost {
 namespace interprocess {
+namespace impl {
 
   class named_pipe_impl
   {
@@ -180,6 +181,7 @@ namespace interprocess {
 
   // End named_pipe_server_impl
 
+}  //namespace impl {
 }  //namespace interprocess {
 }  //namespace boost {
 
