@@ -77,7 +77,7 @@ namespace impl {
     }
 
     un.sun_family = AF_UNIX;
-    ::strcpy(un.sun_path, _name.c_str());
+   strcpy(un.sun_path, _name.c_str());
     len = _name.length() + offsetof(struct sockaddr_un, sun_path);
 
     if (connect(_fd, (struct sockaddr *)&un, len) < 0) {
