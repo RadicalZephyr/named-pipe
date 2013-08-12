@@ -53,8 +53,36 @@ namespace interprocess {
     int _fd;
   };
 
-  named_pipe_impl::named_pipe_impl(const std::string &name): _name(name)
-  {}
+  named_pipe_impl::named_pipe_impl(const std::string &name): _name(name) {
+    struct sockaddr_un un;
+
+    if ((_fd = socket(AF_UNIX, SOCK_STREAM, 0)) < 0) {
+      // TODO: Do things for failure
+    }
+
+    un.sun_family = AF_UNIX;
+    int len = sprintf(un.sun_path, "%s/%s%05d",
+                      PATH_PREFIX, name.c_str(), getpid());
+    len += offsetof(struct sockaddr_un, sun_path);
+
+    unlink(un.sun_path); // in case it already exists
+
+    if (bind(_fd, (struct sockaddr *)&un, len) < 0) {
+      // TODO: Do things for failure
+    }
+
+    if (chmod(un.sun_path, CLI_PERM) < 0) {
+      // TODO: Do things for failure
+    }
+
+    un.sun_family = AF_UNIX;
+    ::strcpy(un.sun_path, _name.c_str());
+    len = _name.length() + offsetof(struct sockaddr_un, sun_path);
+
+    if (connect(_fd, (struct sockaddr *)&un, len) < 0) {
+      // TODO: Do things for failure
+    }
+  }
 
   inline std::size_t named_pipe_impl::read(boost::asio::mutable_buffer &buffer) {
     return 0;
