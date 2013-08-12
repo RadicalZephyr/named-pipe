@@ -20,15 +20,19 @@
 
 #include <boost/throw_exception.hpp>
 #include <boost/system/system_error.hpp>
+#include <boost/system/error_code.hpp>
+#include <boost/system/linux_error.hpp>
 
 namespace boost {
 namespace interprocess {
 namespace impl {
 
+  using namespace boost::system;
+
   int make_local_socket() {
     int fd;
     if ((fd = socket(AF_UNIX, SOCK_STREAM, 0)) < 0) {
-      boost::system::system_error e(errno);
+      system_error e(linux_error::make_error_code(errno));
       boost::throw_exception(e);
     }
 
@@ -44,7 +48,7 @@ namespace impl {
     int len = name.length() + offsetof(struct sockaddr_un, sun_path);
 
     if (bind(fd, (struct sockaddr *)&un, len) < 0) {
-      boost::system::system_error e(errno);
+      system_error e(linux_error::make_error_code(errno));
       boost::throw_exception(e);
     }
 

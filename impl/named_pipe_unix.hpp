@@ -17,6 +17,8 @@
 
 #include <boost/throw_exception.hpp>
 #include <boost/system/system_error.hpp>
+#include <boost/system/error_code.hpp>
+#include <boost/system/linux_error.hpp>
 
 #include <sys/socket.h>
 #include <sys/un.h>
@@ -36,6 +38,8 @@
 namespace boost {
 namespace interprocess {
 namespace impl {
+
+  using namespace boost::system;
 
   class named_pipe_impl
   {
@@ -72,7 +76,7 @@ namespace impl {
     int len = _name.length() + offsetof(struct sockaddr_un, sun_path);
 
     if (connect(_fd, (struct sockaddr *)&un, len) < 0) {
-      boost::system::system_error e(errno);
+      system_error e(linux_error::make_error_code(errno));
       boost::throw_exception(e);
     }
   }
@@ -115,7 +119,8 @@ namespace impl {
 
     // Tell kernel we're a server
     if (listen(_fd, QLEN) < 0) {
-      boost::system::system_error e(errno);
+      error_code ec(errno, system_category());
+      system_error e(ec);
       boost::throw_exception(e);
     }
   }
@@ -127,7 +132,7 @@ namespace impl {
     socklen_t len = sizeof(un);
 
     if ((clifd = ::accept(_fd, (struct sockaddr *)&un, &len)) < 0) {
-      boost::system::system_error e(errno);
+      system_error e(linux_error::make_error_code(errno));
       boost::throw_exception(e);
     }
 
