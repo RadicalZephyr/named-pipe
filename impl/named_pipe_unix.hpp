@@ -31,6 +31,9 @@ namespace interprocess {
   public:
     named_pipe_impl(const std::string &name);
 
+    named_pipe_impl(const std::string &name, int fd):
+      _name(name), _fd(fd) {}
+
     const std::string &get_name() {
       return _name;
     }
@@ -42,6 +45,7 @@ namespace interprocess {
   private:
     const std::string _name;
 
+    int _fd;
   };
 
   named_pipe_impl::named_pipe_impl(const std::string &name): _name(name)
