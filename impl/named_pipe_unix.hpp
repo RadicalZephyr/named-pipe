@@ -22,6 +22,8 @@
 #include <time.h>
 #include <errno.h>
 
+#include "helper.hpp"
+
 #define PATH_PREFIX "boost/interprocess"
 #define CLI_PERM S_IRWXU // rwx for user only
 
@@ -55,30 +57,16 @@ namespace impl {
   };
 
   named_pipe_impl::named_pipe_impl(const std::string &name): _name(name) {
+
+    _fd = make_local_socket();
+
+    bind_local_socket(_fd, PATH_PREFIX "/"+name);
+
     struct sockaddr_un un;
 
-    if ((_fd = socket(AF_UNIX, SOCK_STREAM, 0)) < 0) {
-      // TODO: Do things for failure
-    }
-
     un.sun_family = AF_UNIX;
-    int len = sprintf(un.sun_path, "%s/%s%05d",
-                      PATH_PREFIX, name.c_str(), getpid());
-    len += offsetof(struct sockaddr_un, sun_path);
-
-    unlink(un.sun_path); // in case it already exists
-
-    if (bind(_fd, (struct sockaddr *)&un, len) < 0) {
-      // TODO: Do things for failure
-    }
-
-    if (chmod(un.sun_path, CLI_PERM) < 0) {
-      // TODO: Do things for failure
-    }
-
-    un.sun_family = AF_UNIX;
-   strcpy(un.sun_path, _name.c_str());
-    len = _name.length() + offsetof(struct sockaddr_un, sun_path);
+    strcpy(un.sun_path, _name.c_str());
+    int len = _name.length() + offsetof(struct sockaddr_un, sun_path);
 
     if (connect(_fd, (struct sockaddr *)&un, len) < 0) {
       // TODO: Do things for failure
@@ -117,23 +105,9 @@ namespace impl {
   named_pipe_server_impl::named_pipe_server_impl(const std::string &name):
     _name(name), _fd(-1) {
 
-    if ((_fd = socket(AF_UNIX, SOCK_STREAM, 0)) < 0) {
-      // TODO: Do things for failure
-    }
+    _fd = make_local_socket();
 
-    struct sockaddr_un un;
-    un.sun_family = AF_UNIX;
-
-    int len = sprintf(un.sun_path, "%s/%s",
-                      PATH_PREFIX, name.c_str());
-    len += offsetof(struct sockaddr_un, sun_path);
-
-    // TODO: Unsure if this is a good idea...
-    unlink(un.sun_path); // in case it already exists
-
-    if (bind(_fd, (struct sockaddr *)&un, len) < 0) {
-      // TODO: Do things for failure
-    }
+    bind_local_socket(_fd, PATH_PREFIX "/"+name);
 
     // Tell kernel we're a server
     if (listen(_fd, QLEN) < 0) {
