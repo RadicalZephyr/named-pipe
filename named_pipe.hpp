@@ -67,11 +67,11 @@ namespace interprocess {
      *
      * @throws boost::system::system_error Thrown on failure.
      *
-     * @note The read_some operation may not completely fill the
+     * @note The read operation may not completely fill the
      * buffer.
      */
-    std::size_t read_some(boost::asio::mutable_buffer &buffer) {
-      return _pimpl->read_some(buffer);
+    std::size_t read(boost::asio::mutable_buffer &buffer) {
+      return _pimpl->read(buffer);
     }
 
     /// Write some data to the named pipe.
@@ -86,11 +86,11 @@ namespace interprocess {
      *
      * @throws boost::system::system_error Thrown on failure.
      *
-     * @note The write_some operation may not transmit all of the data
+     * @note The write operation may not transmit all of the data
      * to the peer.
      */
-    std::size_t write_some(boost::asio::const_buffer &buffer) {
-      return _pimpl->write_some(buffer);
+    std::size_t write(boost::asio::const_buffer &buffer) {
+      return _pimpl->write(buffer);
     }
 
     friend class named_pipe_server;

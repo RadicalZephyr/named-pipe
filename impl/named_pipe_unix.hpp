@@ -26,9 +26,9 @@ namespace interprocess {
       return _name;
     }
 
-    std::size_t read_some(boost::asio::mutable_buffer &buffer);
+    std::size_t read(boost::asio::mutable_buffer &buffer);
 
-    std::size_t write_some(boost::asio::const_buffer &buffer);
+    std::size_t write(boost::asio::const_buffer &buffer);
 
   private:
     const std::string _name;
@@ -39,11 +39,11 @@ namespace interprocess {
 
   }
 
-  inline std::size_t read_some(boost::asio::mutable_buffer &buffer) {
+  inline std::size_t read(boost::asio::mutable_buffer &buffer) {
     return 0;
   }
 
-  inline std::size_t write_some(boost::asio::const_buffer &buffer) {
+  inline std::size_t write(boost::asio::const_buffer &buffer) {
     return 0;
   }
 
