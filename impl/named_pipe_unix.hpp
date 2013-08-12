@@ -17,11 +17,16 @@
 
 #include <sys/socket.h>
 #include <sys/un.h>
+#include <sys/stat.h>
+
+#include <time.h>
 #include <errno.h>
 
 #define PATH_PREFIX "boost/interprocess"
 #define CLI_PERM S_IRWXU // rwx for user only
+
 #define QLEN 10
+#define STALE 30
 
 namespace boost {
 namespace interprocess {
@@ -116,7 +121,7 @@ namespace interprocess {
 
     socklen_t len = sizeof(un);
 
-    if ((clifd = accept(_fd, (struct sockaddr *)&un, &len)) < 0) {
+    if ((clifd = ::accept(_fd, (struct sockaddr *)&un, &len)) < 0) {
       // TODO: Do things for failure
     }
 
@@ -140,11 +145,9 @@ namespace interprocess {
       // TODO: Do things for failure
     }
 
-    if (uidptr != NULL) {
-      // TODO: Do things for failure
-    }
-    unlink(un.sun_path);
-    return new named_pipe_impl(clifd);
+    unlink(un.sun_path); // we're done with this path
+    // TODO: really?
+    return new named_pipe_impl(_name, clifd);
   }
 
   // End named_pipe_server_impl
