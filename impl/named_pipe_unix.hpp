@@ -15,6 +15,9 @@
 #include <boost/asio/buffer.hpp>
 #include <boost/shared_ptr.hpp>
 
+#include <boost/throw_exception.hpp>
+#include <boost/system/system_error.hpp>
+
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <sys/stat.h>
@@ -69,7 +72,8 @@ namespace impl {
     int len = _name.length() + offsetof(struct sockaddr_un, sun_path);
 
     if (connect(_fd, (struct sockaddr *)&un, len) < 0) {
-      // TODO: Do things for failure
+      boost::system::system_error e(errno);
+      boost::throw_exception(e);
     }
   }
 
@@ -111,7 +115,8 @@ namespace impl {
 
     // Tell kernel we're a server
     if (listen(_fd, QLEN) < 0) {
-      // TODO: Do things for failure
+      boost::system::system_error e(errno);
+      boost::throw_exception(e);
     }
   }
 
@@ -122,7 +127,8 @@ namespace impl {
     socklen_t len = sizeof(un);
 
     if ((clifd = ::accept(_fd, (struct sockaddr *)&un, &len)) < 0) {
-      // TODO: Do things for failure
+      boost::system::system_error e(errno);
+      boost::throw_exception(e);
     }
 
     return new named_pipe_impl(_name, clifd);
