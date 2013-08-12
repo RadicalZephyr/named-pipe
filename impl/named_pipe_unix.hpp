@@ -109,32 +109,29 @@ namespace impl {
 
   private:
 
-    typedef shared_ptr<struct sockaddr_un> sockAddrPtr;
-
     const std::string _name;
 
     int _fd;
-
-    sockAddrPtr _un;
   };
 
   named_pipe_server_impl::named_pipe_server_impl(const std::string &name):
-    _name(name), _fd(-1), _un(new struct sockaddr_un)
-  {
+    _name(name), _fd(-1) {
+
     if ((_fd = socket(AF_UNIX, SOCK_STREAM, 0)) < 0) {
       // TODO: Do things for failure
     }
 
-    _un->sun_family = AF_UNIX;
+    struct sockaddr_un un;
+    un.sun_family = AF_UNIX;
 
-    int len = sprintf(_un->sun_path, "%s/%s",
+    int len = sprintf(un.sun_path, "%s/%s",
                       PATH_PREFIX, name.c_str());
     len += offsetof(struct sockaddr_un, sun_path);
 
     // TODO: Unsure if this is a good idea...
-    unlink(_un->sun_path); // in case it already exists
+    unlink(un.sun_path); // in case it already exists
 
-    if (bind(_fd, (struct sockaddr *)&(*_un), len) < 0) {
+    if (bind(_fd, (struct sockaddr *)&un, len) < 0) {
       // TODO: Do things for failure
     }
 
