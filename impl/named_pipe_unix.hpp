@@ -35,15 +35,14 @@ namespace interprocess {
 
   };
 
-  named_pipe_impl::named_pipe_impl(const std::string &name): _name(name) {
+  named_pipe_impl::named_pipe_impl(const std::string &name): _name(name)
+  {}
 
-  }
-
-  inline std::size_t read(boost::asio::mutable_buffer &buffer) {
+  inline std::size_t named_pipe_impl::read(boost::asio::mutable_buffer &buffer) {
     return 0;
   }
 
-  inline std::size_t write(boost::asio::const_buffer &buffer) {
+  inline std::size_t named_pipe_impl::write(boost::asio::const_buffer &buffer) {
     return 0;
   }
 
