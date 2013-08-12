@@ -22,18 +22,38 @@ namespace interprocess {
   public:
     named_pipe_impl(const std::string &name);
 
+    static named_pipe_impl *create_and_accept(const std::string &name);
+
     const std::string &get_name() {
       return _name;
     }
 
-    std::size_t read_some(boost::asio::mutable_buffer &buffer);
+    std::size_t read(boost::asio::mutable_buffer &buffer);
 
-    std::size_t write_some(boost::asio::const_buffer &buffer);
+    std::size_t write(boost::asio::const_buffer &buffer);
 
   private:
     const std::string _name;
 
   };
+
+  named_pipe_impl::named_pipe_impl(const std::string &name): _name(name)
+  {}
+
+  inline named_pipe_impl *named_pipe_impl::create_and_accept(const std::string &name) {
+    return new named_pipe_impl(name);
+  }
+
+  inline std::size_t named_pipe_impl::read(boost::asio::mutable_buffer &buffer) {
+    return 0;
+  }
+
+  inline std::size_t named_pipe_impl::write(boost::asio::const_buffer &buffer) {
+    return 0;
+  }
+
+  // End named_pipe_impl
+
 
   class named_pipe_server_impl
   {
@@ -44,11 +64,22 @@ namespace interprocess {
       return _name;
     }
 
-    named_pipe_impl accept();
+    named_pipe_impl *accept();
 
   private:
     const std::string _name;
   };
+
+  named_pipe_server_impl::named_pipe_server_impl(const std::string &name):
+    _name(name) {
+
+  }
+
+  inline named_pipe_impl *named_pipe_server_impl::accept() {
+    return new named_pipe_impl(_name);
+  }
+
+  // End named_pipe_server_impl
 
 }  //namespace interprocess {
 }  //namespace boost {
