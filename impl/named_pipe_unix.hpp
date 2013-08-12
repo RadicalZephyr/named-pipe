@@ -125,28 +125,6 @@ namespace impl {
       // TODO: Do things for failure
     }
 
-    len -= offsetof(struct sockaddr_un, sun_path);
-    un.sun_path[len] = 0; // null terminate string
-
-    struct stat statbuf;
-    if (stat(un.sun_path, &statbuf) < 0) {
-      // TODO: Do things for failure
-    }
-
-#ifdef S_ISSOCK // not defined for SVR4
-    if (S_ISSOCK(statbuf.st_mode) == 0) {
-      // TODO: Do things for failure
-    }
-#endif
-    time_t staletime = time(NULL) - STALE;
-    if (statbuf.st_atime < staletime ||
-        statbuf.st_ctime < staletime ||
-        statbuf.st_mtime < staletime) {
-      // TODO: Do things for failure
-    }
-
-    unlink(un.sun_path); // we're done with this path
-    // TODO: really?
     return new named_pipe_impl(_name, clifd);
   }
 
