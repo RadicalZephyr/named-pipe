@@ -107,7 +107,40 @@ namespace interprocess {
   }
 
   inline named_pipe_impl *named_pipe_server_impl::accept() {
-    return new named_pipe_impl(_name);
+    int clifd;
+    struct sockaddr_un un;
+
+    socklen_t len = sizeof(un);
+
+    if ((clifd = accept(_fd, (struct sockaddr *)&un, &len)) < 0) {
+      // TODO: Do things for failure
+    }
+
+    len -= offsetof(struct sockaddr_un, sun_path);
+    un.sun_path[len] = 0; // null terminate string
+
+    struct stat statbuf;
+    if (stat(un.sun_path, &statbuf) < 0) {
+      // TODO: Do things for failure
+    }
+
+#ifdef S_ISSOCK // not defined for SVR4
+    if (S_ISSOCK(statbuf.st_mode) == 0) {
+      // TODO: Do things for failure
+    }
+#endif
+    time_t staletime = time(NULL) - STALE;
+    if (statbuf.st_atime < staletime ||
+        statbuf.st_ctime < staletime ||
+        statbuf.st_mtime < staletime) {
+      // TODO: Do things for failure
+    }
+
+    if (uidptr != NULL) {
+      // TODO: Do things for failure
+    }
+    unlink(un.sun_path);
+    return new named_pipe_impl(clifd);
   }
 
   // End named_pipe_server_impl
