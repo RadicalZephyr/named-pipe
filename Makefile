@@ -5,7 +5,7 @@
 ## Keywords:
 ## X-URL:
 
-test: test.cpp
+test: test.cpp named_pipe.hpp impl/named_pipe_unix.hpp
 	g++ test.cpp -g -o test
 
 ### Makefile ends here
