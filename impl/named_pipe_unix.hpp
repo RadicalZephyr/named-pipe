@@ -13,6 +13,15 @@
 #include <string>
 
 #include <boost/asio/buffer.hpp>
+#include <boost/shared_ptr.hpp>
+
+#include <sys/socket.h>
+#include <sys/un.h>
+#include <errno.h>
+
+#define PATH_PREFIX "boost/interprocess"
+#define CLI_PERM S_IRWXU // rwx for user only
+#define QLEN 10
 
 namespace boost {
 namespace interprocess {
@@ -61,12 +70,40 @@ namespace interprocess {
     named_pipe_impl *accept();
 
   private:
+
+    typedef shared_ptr<struct sockaddr_un> sockAddrPtr;
+
     const std::string _name;
+
+    int _fd;
+
+    sockAddrPtr _un;
   };
 
   named_pipe_server_impl::named_pipe_server_impl(const std::string &name):
-    _name(name) {
+    _name(name), _fd(-1), _un(new struct sockaddr_un)
+  {
+    if ((_fd = socket(AF_UNIX, SOCK_STREAM, 0)) < 0) {
+      // TODO: Do things for failure
+    }
 
+    _un->sun_family = AF_UNIX;
+
+    int len = sprintf(_un->sun_path, "%s/%s",
+                      PATH_PREFIX, name.c_str());
+    len += offsetof(struct sockaddr_un, sun_path);
+
+    // TODO: Unsure if this is a good idea...
+    unlink(_un->sun_path); // in case it already exists
+
+    if (bind(_fd, (struct sockaddr *)&(*_un), len) < 0) {
+      // TODO: Do things for failure
+    }
+
+    // Tell kernel we're a server
+    if (listen(_fd, QLEN) < 0) {
+      // TODO: Do things for failure
+    }
   }
 
   inline named_pipe_impl *named_pipe_server_impl::accept() {
