@@ -85,11 +85,23 @@ namespace impl {
   }
 
   inline std::size_t named_pipe_impl::read(char *buffer, const int length) {
-    return ::read(_fd, buffer, length);
+    std::size_t size = ::read(_fd, buffer, length);
+    if (size < 0) {
+      error_code ec(errno, system_category());
+      system_error e(ec);
+      boost::throw_exception(e);
+    }
+    return size;
   }
 
   inline std::size_t named_pipe_impl::write(const char *buffer, const int length) {
-    return ::write(_fd, buffer, length);
+    std::size_t size = ::write(_fd, buffer, length);
+    if (size < 0) {
+      error_code ec(errno, system_category());
+      system_error e(ec);
+      boost::throw_exception(e);
+    }
+    return size;
   }
 
   // End named_pipe_impl
