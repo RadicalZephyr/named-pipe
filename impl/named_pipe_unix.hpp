@@ -132,7 +132,7 @@ namespace impl {
     }
   }
 
-  inline named_pipe_impl *named_pipe_server_impl::accept() {
+  named_pipe_impl *named_pipe_server_impl::accept() {
     int clifd;
     struct sockaddr_un un;
 
