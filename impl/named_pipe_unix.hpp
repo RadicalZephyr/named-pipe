@@ -20,6 +20,7 @@
 #include <boost/system/error_code.hpp>
 #include <boost/system/linux_error.hpp>
 
+#include <unistd.h>
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <sys/stat.h>
@@ -84,11 +85,11 @@ namespace impl {
   }
 
   inline std::size_t named_pipe_impl::read(char *buffer, const int length) {
-    return 0;
+    return ::read(_fd, buffer, length);
   }
 
   inline std::size_t named_pipe_impl::write(const char *buffer, const int length) {
-    return 0;
+    return ::write(_fd, buffer, length);
   }
 
   // End named_pipe_impl
