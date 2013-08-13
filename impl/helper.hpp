@@ -24,6 +24,8 @@
 #include <boost/system/error_code.hpp>
 #include <boost/system/linux_error.hpp>
 
+#include <boost/filesystem.hpp>
+
 namespace boost {
 namespace interprocess {
 namespace impl {
@@ -44,6 +46,16 @@ namespace impl {
     return temp;
   }
 
+  void ensure_path_exists(const std::string path) {
+    size_t index = path.find_first_of('/');
+    index = path.find_first_of('/', index+1);
+
+    while (index != std::string::npos) {
+      boost::filesystem::create_directory(path.substr(0, index));
+      index = path.find_first_of('/', index+1);
+    }
+  }
+
   int make_local_socket() {
     int fd;
     if ((fd = socket(AF_UNIX, SOCK_STREAM, 0)) < 0) {
@@ -56,6 +68,7 @@ namespace impl {
   }
 
   void bind_local_socket(int fd, const std::string &name) {
+    ensure_path_exists(name);
     struct sockaddr_un un;
 
     un.sun_family = AF_UNIX;
