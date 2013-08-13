@@ -117,6 +117,7 @@ namespace impl {
     char buff[128];
     snprintf(buff,128, "%s/%s/%s",
              get_temp_path(), PATH_PREFIX, name.c_str());
+    unlink(buff);
     bind_local_socket(_fd, buff);
 
     // Tell kernel we're a server
