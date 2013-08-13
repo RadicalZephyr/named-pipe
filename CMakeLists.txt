@@ -10,3 +10,6 @@ target_link_libraries(test boost_system boost_filesystem)
 
 add_executable(clienttest clienttest.cpp)
 target_link_libraries(clienttest boost_system boost_filesystem)
+
+enable_testing()
+add_test(round_trip "../runtest.sh")
