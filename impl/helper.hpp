@@ -9,6 +9,7 @@
 #ifndef BOOST_INTERPROCESS_NAMED_PIPE_HELPER_HPP
 #define BOOST_INTERPROCESS_NAMED_PIPE_HELPER_HPP
 
+#include <cstdlib>
 #include <cstddef>
 #include <string>
 #include <cstring>
@@ -28,6 +29,17 @@ namespace interprocess {
 namespace impl {
 
   using namespace boost::system;
+
+  const char *get_temp_path() {
+    char *temp = getenv("TEMP");
+    if (temp == NULL) {
+      temp = getenv("TMP");
+    }
+    if (temp == NULL) {
+      temp = getenv("TMPDIR");
+    }
+    return temp;
+  }
 
   int make_local_socket() {
     int fd;
