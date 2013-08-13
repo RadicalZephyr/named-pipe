@@ -68,10 +68,13 @@ namespace impl {
     _fd = make_local_socket();
 
     struct sockaddr_un un;
+    char buff[128];
+    int len = snprintf(buff,128, "%s/%s/%s",
+                       get_temp_path(), PATH_PREFIX, name.c_str());
 
     un.sun_family = AF_UNIX;
-    strcpy(un.sun_path, _name.c_str());
-    int len = _name.length() + offsetof(struct sockaddr_un, sun_path);
+    strcpy(un.sun_path, buff);
+    len += offsetof(struct sockaddr_un, sun_path);
 
     if (connect(_fd, (struct sockaddr *)&un, len) < 0) {
       error_code ec(errno, system_category());
