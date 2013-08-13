@@ -21,7 +21,7 @@ int main() {
   pipe.read(buff, BUFSIZE);
 
   if (strcmp(serverString, buff) != 0)
-    return 1;
+    return 2;
 
   return 0;
 }

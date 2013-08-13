@@ -18,14 +18,14 @@ int main() {
   named_pipe pipe = server.accept();
 
   if (strcmp(pipename, pipe.get_name().c_str()) != 0)
-    return 1;
+    return 2;
 
   char buff[BUFSIZE];
 
   pipe.read(buff, BUFSIZE);
 
   if (strcmp(clientString, buff) != 0)
-    return 1;
+    return 3;
 
   pipe.write(serverString, strlen(serverString));
 
