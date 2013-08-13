@@ -67,12 +67,6 @@ namespace impl {
 
     _fd = make_local_socket();
 
-    char buff[128];
-    snprintf(buff,128, "%s/%s/%s",
-             get_temp_path(), PATH_PREFIX, name.c_str());
-
-    bind_local_socket(_fd, buff);
-
     struct sockaddr_un un;
 
     un.sun_family = AF_UNIX;
