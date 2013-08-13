@@ -38,6 +38,9 @@ namespace impl {
     if (temp == NULL) {
       temp = getenv("TMPDIR");
     }
+    if (temp == NULL) {
+      return "/tmp";
+    }
     return temp;
   }
 
