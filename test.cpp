@@ -1,13 +1,33 @@
 
 #include <cstdio>
+#include <cstring>
+
+#include "testdata.h"
 #include "named_pipe.hpp"
+
+#define BUFSIZE 120
 
 using namespace boost::interprocess;
 
 int main() {
-  const char *pipename = "my/named/pipe";
   named_pipe_server server(pipename);
+
+  if (strcmp(pipename, server.get_name().c_str()) != 0)
+    return 1;
+
   named_pipe pipe = server.accept();
 
-  printf("%s == %s\n", pipe.get_name().c_str(), pipename);
+  if (strcmp(pipename, pipe.get_name().c_str()) != 0)
+    return 1;
+
+  char buff[BUFSIZE];
+
+  pipe.read(boost::asio::buffer(buff));
+
+  if (strcmp(clientString, buff) != 0)
+    return 1;
+
+  pipe.write(boost::asio::buffer(serverString));
+
+  return 0;
 }
