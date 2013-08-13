@@ -7,3 +7,6 @@ include_directories("${Boost_INCLUDE_DIRS}")
 
 add_executable(test test.cpp)
 target_link_libraries(test boost_system boost_filesystem)
+
+add_executable(clienttest clienttest.cpp)
+target_link_libraries(clienttest boost_system boost_filesystem)
