@@ -67,7 +67,11 @@ namespace impl {
 
     _fd = make_local_socket();
 
-    bind_local_socket(_fd, PATH_PREFIX "/"+name);
+    char buff[128];
+    snprintf(buff,128, "%s/%s/%s",
+             get_temp_path(), PATH_PREFIX, name.c_str());
+
+    bind_local_socket(_fd, buff);
 
     struct sockaddr_un un;
 
@@ -116,7 +120,10 @@ namespace impl {
 
     _fd = make_local_socket();
 
-    bind_local_socket(_fd, PATH_PREFIX "/"+name);
+    char buff[128];
+    snprintf(buff,128, "%s/%s/%s",
+             get_temp_path(), PATH_PREFIX, name.c_str());
+    bind_local_socket(_fd, buff);
 
     // Tell kernel we're a server
     if (listen(_fd, QLEN) < 0) {
