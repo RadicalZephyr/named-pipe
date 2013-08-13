@@ -7,6 +7,6 @@ int main() {
   const char *pipename = "my/named/pipe";
   named_pipe pipe(pipename);
 
-  printf("%s == %s", pipe.get_name().c_str(), pipename);
+  printf("%s == %s\n", pipe.get_name().c_str(), pipename);
 
 }

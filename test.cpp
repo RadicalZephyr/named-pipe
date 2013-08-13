@@ -9,5 +9,5 @@ int main() {
   named_pipe_server server(pipename);
   named_pipe pipe = server.accept();
 
-  printf("%s == %s", pipe.get_name().c_str(), pipename);
+  printf("%s == %s\n", pipe.get_name().c_str(), pipename);
 }
