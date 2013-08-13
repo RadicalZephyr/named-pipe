@@ -53,9 +53,9 @@ namespace impl {
       return _name;
     }
 
-    std::size_t read(boost::asio::mutable_buffer &buffer);
+    std::size_t read(char *buffer, const int length);
 
-    std::size_t write(boost::asio::const_buffer &buffer);
+    std::size_t write(const char *buffer, const int length);
 
   private:
     const std::string _name;
@@ -83,11 +83,11 @@ namespace impl {
     }
   }
 
-  inline std::size_t named_pipe_impl::read(boost::asio::mutable_buffer &buffer) {
+  inline std::size_t named_pipe_impl::read(char *buffer, const int length) {
     return 0;
   }
 
-  inline std::size_t named_pipe_impl::write(boost::asio::const_buffer &buffer) {
+  inline std::size_t named_pipe_impl::write(const char *buffer, const int length) {
     return 0;
   }
 

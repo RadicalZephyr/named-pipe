@@ -70,8 +70,8 @@ namespace interprocess {
      * @note The read operation may not completely fill the
      * buffer.
      */
-    std::size_t read(boost::asio::mutable_buffer &buffer) {
-      return _pimpl->read(buffer);
+    std::size_t read(char *buffer, const int length) {
+      return _pimpl->read(buffer, length);
     }
 
     /// Write some data to the named pipe.
@@ -89,8 +89,8 @@ namespace interprocess {
      * @note The write operation may not transmit all of the data
      * to the peer.
      */
-    std::size_t write(boost::asio::const_buffer &buffer) {
-      return _pimpl->write(buffer);
+    std::size_t write(const char *buffer, const int length) {
+      return _pimpl->write(buffer, length);
     }
 
     friend class named_pipe_server;

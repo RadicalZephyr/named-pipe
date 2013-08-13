@@ -22,12 +22,12 @@ int main() {
 
   char buff[BUFSIZE];
 
-  pipe.read(boost::asio::buffer(buff));
+  pipe.read(buff, BUFSIZE);
 
   if (strcmp(clientString, buff) != 0)
     return 1;
 
-  pipe.write(boost::asio::buffer(serverString));
+  pipe.write(serverString, strlen(serverString));
 
   return 0;
 }

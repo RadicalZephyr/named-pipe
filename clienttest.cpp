@@ -16,9 +16,9 @@ int main() {
 
   char buff[BUFSIZE];
 
-  pipe.write(boost::asio::buffer(clientString));
+  pipe.write(clientString, strlen(clientString));
 
-  pipe.read(boost::asio::buffer(buff));
+  pipe.read(buff, BUFSIZE);
 
   if (strcmp(serverString, buff) != 0)
     return 1;
