@@ -75,11 +75,25 @@ namespace impl {
   }
 
   inline std::size_t named_pipe_impl::read(char *buffer, const int length) {
-    return 0;
+    DWORD read;
+    bool success = ReadFile(_pipe, buffer, length, &read, NULL);
+    if (!success && GetLastError() != ERROR_MORE_DATA ) {
+      error_code ec(GetLastError(), system_category());
+      system_error e(ec);
+      boost::throw_exception(e);
+    }
+    return read;
   }
 
   inline std::size_t named_pipe_impl::write(const char *buffer, const int length) {
-    return 0;
+    DWORD written;
+    bool success = WriteFile(_pipe, buffer, length, &written, NULL);
+    if (!success) {
+      error_code ec(GetLastError(), system_category());
+      system_error e(ec);
+      boost::throw_exception(e);
+    }
+    return written;
   }
 
   // End named_pipe_impl
