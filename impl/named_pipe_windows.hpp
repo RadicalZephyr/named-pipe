@@ -14,7 +14,10 @@
 #include <cstddef>
 #include <string>
 
-#include <boost/asio/buffer.hpp>
+#include <boost/throw_exception.hpp>
+#include <boost/system/system_error.hpp>
+#include <boost/system/error_code.hpp>
+#include <boost/system/linux_error.hpp>
 
 #define BUFFSIZE 512
 #define QLEN 10
@@ -22,6 +25,8 @@
 namespace boost {
 namespace interprocess {
 namespace impl {
+
+  using namespace boost::system;
 
   class named_pipe_impl
   {
@@ -99,14 +104,17 @@ namespace impl {
                                   0,
                                   NULL);
     if (pipe == INVALID_HANDLE_VALUE) {
-      // Do failure stuff
+      error_code ec(GetLastError(), system_category());
+      system_error e(ec);
+      boost::throw_exception(e);
     }
     bool connected = ConnectNamedPipe(pipe, NULL) ?
          TRUE : (GetLastError() == ERROR_PIPE_CONNECTED);
 
     if (!connected) {
-      CloseHandle(pipe);
-      // Do failure stuff
+      error_code ec(GetLastError(), system_category());
+      system_error e(ec);
+      boost::throw_exception(e);
     }
 
     return new named_pipe_impl(_name, pipe);
