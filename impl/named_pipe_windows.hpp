@@ -9,10 +9,15 @@
 #ifndef BOOST_INTERPROCESS_NAMED_PIPE_WINDOWS_HPP
 #define BOOST_INTERPROCESS_NAMED_PIPE_WINDOWS_HPP
 
+#include <windows.h>
+
 #include <cstddef>
 #include <string>
 
 #include <boost/asio/buffer.hpp>
+
+#define BUFFSIZE 512
+#define QLEN 10
 
 namespace boost {
 namespace interprocess {
@@ -22,6 +27,9 @@ namespace impl {
   {
   public:
     named_pipe_impl(const std::string &name);
+
+    named_pipe_impl(const std::string &name, HANDLE pipe): _name(name), _pipe(pipe)
+    {}
 
     static named_pipe_impl *create_and_accept(const std::string &name);
 
@@ -35,6 +43,8 @@ namespace impl {
 
   private:
     const std::string _name;
+
+    HANDLE _pipe;
 
   };
 
@@ -77,7 +87,29 @@ namespace impl {
   }
 
   inline named_pipe_impl *named_pipe_server_impl::accept() {
-    return new named_pipe_impl(_name);
+    HANDLE pipe = CreateNamedPipe(_name.c_str(),
+                                  PIPE_ACCESS_DUPLEX,       // read/write access
+                                  PIPE_TYPE_BYTE |
+                                  PIPE_READMODE_BYTE |
+                                  PIPE_WAIT |
+                                  PIPE_REJECT_REMOTE_CLIENTS,
+                                  QLEN,
+                                  BUFFSIZE,
+                                  BUFFSIZE,
+                                  0,
+                                  NULL);
+    if (pipe == INVALID_HANDLE_VALUE) {
+      // Do failure stuff
+    }
+    bool connected = ConnectNamedPipe(pipe, NULL) ?
+         TRUE : (GetLastError() == ERROR_PIPE_CONNECTED);
+
+    if (!connected) {
+      CloseHandle(pipe);
+      // Do failure stuff
+    }
+
+    return new named_pipe_impl(_name, pipe);
   }
 
   // End named_pipe_server_impl
