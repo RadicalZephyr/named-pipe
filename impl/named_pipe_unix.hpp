@@ -91,6 +91,7 @@ namespace impl {
       system_error e(ec);
       boost::throw_exception(e);
     }
+    buffer[size] = '\0';
     return size;
   }
 
