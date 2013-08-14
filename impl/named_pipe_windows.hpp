@@ -53,8 +53,22 @@ namespace impl {
 
   };
 
-  named_pipe_impl::named_pipe_impl(const std::string &name): _name(name)
-  {}
+  named_pipe_impl::named_pipe_impl(const std::string &name):
+    _name(name) {
+    _pipe = CreateFile(name.c_str(),
+                       GENERIC_READ |  // read and write access
+                       GENERIC_WRITE,
+                       0,              // no sharing
+                       NULL,           // default security attributes
+                       OPEN_EXISTING,  // opens existing pipe
+                       0,              // default attributes
+                       NULL);
+    if (_pipe == INVALID_HANDLE_VALUE) {
+      error_code ec(GetLastError(), system_category());
+      system_error e(ec);
+      boost::throw_exception(e);
+    }
+  }
 
   inline named_pipe_impl *named_pipe_impl::create_and_accept(const std::string &name) {
     return new named_pipe_impl(name);
