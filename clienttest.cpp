@@ -11,8 +11,11 @@ using namespace boost::interprocess;
 int main() {
   named_pipe pipe(pipename);
 
-  if (strcmp(pipename, pipe.get_name().c_str()) != 0)
+  if (strcmp(pipename, pipe.get_name().c_str()) != 0) {
+    printf("error: received '%s'; expected '%s'\n",
+           pipe.get_name().c_str(), pipename);
     return 1;
+  }
 
   char buff[BUFSIZE];
 
@@ -20,8 +23,11 @@ int main() {
 
   pipe.read(buff, BUFSIZE);
 
-  if (strcmp(serverString, buff) != 0)
+  if (strcmp(serverString, buff) != 0) {
+    printf("error: received '%s'; expected '%s'\n",
+           buff, serverString);
     return 2;
+  }
 
   return 0;
 }
