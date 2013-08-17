@@ -43,7 +43,7 @@ int main() {
     pipelist->push_back(clientpipe);
     char name[32];
     clientpipe.read(name, 32);
-    namelist->push_back(name);
+    sscanf(name, "[name]:%s", &name);
     string names("");
     const char *sep = "";
     for (vector<string>::iterator itr = namelist->begin();
@@ -53,6 +53,7 @@ int main() {
       sep = ", ";
     }
     clientpipe.write(names.c_str(), names.length());
+    namelist->push_back(name);
     thread t(DoReceive(), clientpipe);
   }
 }
