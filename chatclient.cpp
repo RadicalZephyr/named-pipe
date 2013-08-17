@@ -21,7 +21,10 @@ int main() {
 
   char name[32];
   fgets(name, 32, stdin);
-  name[31] = '\0'; // Remove newline/EOF from name
+  {
+    int len = strlen(name);
+    name[len-1] = '\0'; // Remove newline/EOF from name
+  }
 
   printf("\nSending your name to server...");
   {
@@ -30,7 +33,7 @@ int main() {
     pipe.write(transmit.c_str(), transmit.length());
     printf("\nSuccessfully logged in as '%s'!", name);
 
-    char otherusers[32*10];
+    char otherusers[34*10];
     pipe.read(otherusers, 32*10);
     printf("\n\nOther users currently present: %s", otherusers);
   }
