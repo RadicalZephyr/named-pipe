@@ -42,7 +42,17 @@ int main() {
     named_pipe clientpipe = server.accept();
     pipelist->push_back(clientpipe);
     char name[32];
-    pipe.read(name, 32);
+    clientpipe.read(name, 32);
+    namelist->push_back(name);
+    string names("");
+    const char *sep = "";
+    for (vector<string>::iterator itr = namelist->begin();
+         itr != namelist->end(); itr++) {
+      names += sep;
+      names += *itr;
+      sep = ", ";
+    }
+    clientpipe.write(names.c_str(), names.length());
     thread t(DoReceive(), clientpipe);
   }
 }
