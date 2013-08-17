@@ -28,6 +28,11 @@ namespace impl {
 
   using namespace boost::system;
 
+  std::string &getPipePrefix(void) {
+    static std::string prefix("\\\\.\\pipe\\boost\\interprocess\\");
+    return prefix;
+  }
+
   class named_pipe_impl
   {
   public:
@@ -55,7 +60,8 @@ namespace impl {
 
   named_pipe_impl::named_pipe_impl(const std::string &name):
     _name(name) {
-    _pipe = CreateFile(name.c_str(),
+    std::string whole = getPipePrefix() + _name;
+    _pipe = CreateFile(whole.c_str(),
                        GENERIC_READ |  // read and write access
                        GENERIC_WRITE,
                        0,              // no sharing
@@ -120,7 +126,8 @@ namespace impl {
   }
 
   inline named_pipe_impl *named_pipe_server_impl::accept() {
-    HANDLE pipe = CreateNamedPipe(_name.c_str(),
+    std::string whole = getPipePrefix() + _name;
+    HANDLE pipe = CreateNamedPipe(whole.c_str(),
                                   PIPE_ACCESS_DUPLEX,       // read/write access
                                   PIPE_TYPE_BYTE |
                                   PIPE_READMODE_BYTE |
