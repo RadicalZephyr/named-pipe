@@ -33,6 +33,29 @@ namespace impl {
     return prefix;
   }
 
+  std::string windowifyPath(const std::string &str) {
+    int count = 0;
+    int pos = -1;
+    // Count occurrences of '/'
+    while ((pos = str.find("/", pos+1)) != std::string::npos) {
+      ++count;
+    }
+    int buflen = str.length();
+    char *buffer = new char[buflen+1];
+    int to = 0;
+    for (int from = 0; from < buflen; ++from, ++to) {
+      if (str[from] != '/') {
+        buffer[to] = str[from];
+      } else {
+        buffer[to] = '\\';
+      }
+    }
+    buffer[to] = '\0';
+    std::string ret(buffer);
+    delete buffer;
+    return ret;
+  }
+
   class named_pipe_impl
   {
   public:
@@ -60,7 +83,8 @@ namespace impl {
 
   named_pipe_impl::named_pipe_impl(const std::string &name):
     _name(name) {
-    std::string whole = getPipePrefix() + _name;
+    std::string whole = getPipePrefix() + windowifyPath(_name);
+    printf("pipename: '%s'\n", whole.c_str());
     _pipe = CreateFile(whole.c_str(),
                        GENERIC_READ |  // read and write access
                        GENERIC_WRITE,
@@ -83,10 +107,14 @@ namespace impl {
   inline std::size_t named_pipe_impl::read(char *buffer, const int length) {
     DWORD read;
     bool success = ReadFile(_pipe, buffer, length, &read, NULL);
-    if (!success && GetLastError() != ERROR_MORE_DATA ) {
-      error_code ec(GetLastError(), system_category());
+    int error = GetLastError();
+    if (!success && error != ERROR_MORE_DATA ) {
+      error_code ec(error, system_category());
       system_error e(ec);
       boost::throw_exception(e);
+    }
+    if (read < length) {
+      buffer[read] = '\0';
     }
     return read;
   }
@@ -126,7 +154,8 @@ namespace impl {
   }
 
   inline named_pipe_impl *named_pipe_server_impl::accept() {
-    std::string whole = getPipePrefix() + _name;
+    std::string whole = getPipePrefix() + windowifyPath(_name);
+    printf("server pipename: '%s'\n", whole.c_str());
     HANDLE pipe = CreateNamedPipe(whole.c_str(),
                                   PIPE_ACCESS_DUPLEX,       // read/write access
                                   PIPE_TYPE_BYTE |
