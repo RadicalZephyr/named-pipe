@@ -17,10 +17,10 @@ int main() {
   printf("\nConnecting to chat server...");
   named_pipe pipe(pipename);
 
-  printf("\nConnected to server!  Enter your name (32 character max.):");
+  printf("\nConnected to server!  Enter your name (31 character max.):");
 
-  char name[33];
-  fgets(name, 33, stdin);
+  char name[32];
+  fgets(name, 32, stdin);
   name[31] = '\0'; // Remove newline/EOF from name
 
   printf("\nSending your name to server...");
@@ -30,8 +30,8 @@ int main() {
     pipe.write(transmit.c_str(), transmit.length());
     printf("\nSuccessfully logged in as '%s'!", name);
 
-    char otherusers[33*10];
-    pipe.read(otherusers, 33*10);
+    char otherusers[32*10];
+    pipe.read(otherusers, 32*10);
     printf("\n\nOther users currently present: %s", otherusers);
   }
 

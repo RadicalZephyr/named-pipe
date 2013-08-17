@@ -28,6 +28,7 @@ struct DoWrite {
 
 boost::synchronized_value<bool> running = true;
 boost::synchronized_value< vector<named_pipe > > pipelist;
+boost::synchronized_value< vector<string > > namelist;
 boost::synchronized_value< queue<string> > msgqueue;
 
 int main() {
@@ -40,6 +41,8 @@ int main() {
   while(*running) {
     named_pipe clientpipe = server.accept();
     pipelist->push_back(clientpipe);
+    char name[32];
+    pipe.read(name, 32);
     thread t(DoReceive(), clientpipe);
   }
 }
@@ -56,7 +59,7 @@ void DoReceive::operator ()(named_pipe pipe) {
 void DoWrite::operator ()() {
   while (*running) {
     string msg = msgqueue->front();
-
+    printf("%s\n", msg.c_str());
     for (vector<named_pipe>::iterator i = pipelist->begin();
          i != pipelist->end(); i++) {
       i->write(msg.c_str(), msg.length());
