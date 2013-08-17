@@ -2,9 +2,12 @@ cmake_minimum_required(VERSION 2.8)
 
 project(named_pipe)
 
+SET(CMAKE_CXX_FLAGS "-std=c++0x")
+
 set(Boost_USE_MULTITHREAD OFF)
 
-find_package(Boost REQUIRED)
+find_package(Boost COMPONENTS system filesystem thread REQUIRED)
+
 include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 
