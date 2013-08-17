@@ -4,6 +4,8 @@
 #include <chrono>
 #include <thread>
 
+#include <boost/system/windows_error.hpp>
+
 #include "testdata.h"
 #include "named_pipe.hpp"
 
@@ -39,9 +41,6 @@ int main() {
   }
 
   pipe.write(serverString, strlen(serverString));
-
-  std::chrono::milliseconds dura( 2000 );
-  std::this_thread::sleep_for(dura);
 
   return 0;
 }

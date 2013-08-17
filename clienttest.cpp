@@ -31,8 +31,5 @@ int main() {
     return 2;
   }
 
-  std::chrono::milliseconds dura( 2000 );
-  std::this_thread::sleep_for(dura);
-
   return 0;
 }
