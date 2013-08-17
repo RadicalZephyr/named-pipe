@@ -20,5 +20,5 @@ add_test(round_trip "../runtest.sh")
 add_executable(chatclient chatclient.cpp)
 target_link_libraries(chatclient ${Boost_LIBRARIES})
 
-add_executable(serverclient chatserver.cpp)
+add_executable(chatserver chatserver.cpp)
 target_link_libraries(chatclient ${Boost_LIBRARIES})

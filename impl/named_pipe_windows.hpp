@@ -84,7 +84,7 @@ namespace impl {
   named_pipe_impl::named_pipe_impl(const std::string &name):
     _name(name) {
     std::string whole = getPipePrefix() + windowifyPath(_name);
-    printf("pipename: '%s'\n", whole.c_str());
+
     _pipe = CreateFile(whole.c_str(),
                        GENERIC_READ |  // read and write access
                        GENERIC_WRITE,
@@ -155,7 +155,7 @@ namespace impl {
 
   inline named_pipe_impl *named_pipe_server_impl::accept() {
     std::string whole = getPipePrefix() + windowifyPath(_name);
-    printf("server pipename: '%s'\n", whole.c_str());
+
     HANDLE pipe = CreateNamedPipe(whole.c_str(),
                                   PIPE_ACCESS_DUPLEX,       // read/write access
                                   PIPE_TYPE_BYTE |
