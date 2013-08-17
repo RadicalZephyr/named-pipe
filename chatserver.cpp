@@ -19,7 +19,7 @@ using namespace boost::interprocess;
 using boost::thread;
 
 struct DoReceive {
-  void operator()(named_pipe pipe);
+  void operator()(named_pipe pipe, string &name);
 };
 
 struct DoWrite {
@@ -39,11 +39,14 @@ int main() {
   named_pipe_server server(pipename);
 
   while(*running) {
+    printf("\nWaiting for new clients...");
     named_pipe clientpipe = server.accept();
+    printf("\nNew connection!!");
     pipelist->push_back(clientpipe);
     char name[32];
     clientpipe.read(name, 32);
     sscanf(name, "[name]:%s", &name);
+    printf("'%s' joined the chat!", name);
     string names("");
     const char *sep = "";
     for (vector<string>::iterator itr = namelist->begin();
@@ -54,23 +57,26 @@ int main() {
     }
     clientpipe.write(names.c_str(), names.length());
     namelist->push_back(name);
-    thread t(DoReceive(), clientpipe);
+    thread t(DoReceive(), clientpipe, string(name));
   }
 }
 
 
-void DoReceive::operator ()(named_pipe pipe) {
+void DoReceive::operator ()(named_pipe pipe, string &name) {
   while(*running) {
     char buffer[BUFSIZE];
-    pipe.read(buffer, BUFSIZE);
-    msgqueue->push(buffer);
+    int len = pipe.read(buffer, BUFSIZE);
+
+    if (len > 0) {
+      msgqueue->push(name+buffer);
+    }
   }
 }
 
 void DoWrite::operator ()() {
   while (*running) {
     string msg = msgqueue->front();
-    printf("%s\n", msg.c_str());
+    printf("Sending message: \"%s\"\n", msg.c_str());
     for (vector<named_pipe>::iterator i = pipelist->begin();
          i != pipelist->end(); i++) {
       i->write(msg.c_str(), msg.length());
