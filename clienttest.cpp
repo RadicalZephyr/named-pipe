@@ -1,5 +1,7 @@
 #include <cstdio>
 #include <cstring>
+#include <chrono>
+#include <thread>
 
 #include "testdata.h"
 #include "named_pipe.hpp"
@@ -28,6 +30,9 @@ int main() {
            buff, serverString);
     return 2;
   }
+
+  std::chrono::milliseconds dura( 2000 );
+  std::this_thread::sleep_for(dura);
 
   return 0;
 }
