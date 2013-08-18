@@ -4,7 +4,8 @@ project(named_pipe)
 
 set(Boost_USE_MULTITHREAD OFF)
 
-find_package(Boost REQUIRED)
+find_package(Boost COMPONENTS system filesystem REQUIRED)
+
 include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 

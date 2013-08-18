@@ -1,7 +1,5 @@
 #include <cstdio>
 #include <cstring>
-#include <chrono>
-#include <thread>
 
 #include "testdata.h"
 #include "named_pipe.hpp"

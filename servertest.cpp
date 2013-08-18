@@ -1,8 +1,6 @@
 
 #include <cstdio>
 #include <cstring>
-#include <chrono>
-#include <thread>
 
 #include <boost/system/windows_error.hpp>
 
