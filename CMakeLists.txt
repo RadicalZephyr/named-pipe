@@ -20,4 +20,6 @@ add_test(round_trip "../runtest.sh")
 
 add_executable(echoserver echoserver.cpp)
 target_link_libraries(echoserver ${Boost_LIBRARIES})
-target_link_libraries(clienttest ${Boost_LIBRARIES})
+
+add_executable(echoclient echoclient.cpp)
+target_link_libraries(echoclient ${Boost_LIBRARIES})
