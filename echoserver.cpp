@@ -9,11 +9,11 @@
 #define BUFSIZE 512
 
 int main() {
-  printf("Starting the echo server...");
+  printf("Starting the echo server...\n");
   boost::interprocess::named_pipe_server server(pipename);
   boost::interprocess::named_pipe pipe = server.accept();
 
-  printf("\nReceived pipe connection!");
+  printf("Received pipe connection!");
 
   const char *exit = "exit";
   const std::string yousaid("You said: ");
@@ -27,7 +27,7 @@ int main() {
     read = pipe.read(buffer, BUFSIZE);
     printf("received: '%s'\n", buffer);
     pipe.write((yousaid+buffer).c_str(), yousaid.length()+read);
-    if (strncmp(exit, buffer, 4)) {
+    if (strncmp(exit, buffer, 4) == 0) {
         running = false;
         pipe.write("Goodbye!!", 9);
       }

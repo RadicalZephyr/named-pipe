@@ -22,7 +22,11 @@ int main() {
     printf(">> ");
     fgets(buffer, BUFSIZE, stdin);
     read = strlen(buffer);
-    buffer[read+1] = '\0';
+    buffer[read-1] = '\0';
+
+    if (strncmp("exit", buffer, 4) == 0) {
+      running = false;
+    }
 
     pipe.write(buffer, read);
     pipe.read(buffer, BUFSIZE);
